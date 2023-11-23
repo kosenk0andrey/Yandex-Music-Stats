@@ -1,16 +1,17 @@
-﻿using Yandex.Music.Api.Models.Track;
+﻿using Yandex.Music.Api.Models.Account;
+using Yandex.Music.Api.Models.Track;
 using Yandex.Music.Client;
 
 namespace YandexMusicStats.Services;
 
 public class DataProvider
 {
-    public List<YTrack>? GetLikedTracks(string ymToken)
+    public async Task<YLoginInfo?> GetUserInfoAsync(string ymToken)
     {
-        var client = new YandexMusicClient();
+        var client = new YandexMusicClientAsync();
 
-        if (client.Authorize(ymToken))
-            return client.GetLikedTracks();
+        if (await client.Authorize(ymToken))
+            return await client.GetLoginInfo();
 
         return null;
     }

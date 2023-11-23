@@ -1,14 +1,19 @@
-﻿using Yandex.Music.Api.Models.Track;
+﻿using Yandex.Music.Api.Models.Account;
+using Yandex.Music.Api.Models.Track;
 using YandexMusicStats.Data;
 
 namespace YandexMusicStats.Services;
 
 public class DataProcessor
 {
-    public Stats GetStats(List<YTrack> trackList)
+    public Stats GetStats(List<YTrack> trackList, YLoginInfo loginInfo)
     {
         return new Stats
         {
+            AvatarUrl = loginInfo.AvatarUrl,
+            Email = loginInfo.DefaultEmail,
+            UserName = loginInfo.DisplayName,
+
             AverageDuration = (int)trackList.Select(t => t.DurationMs).Average(),
             AverageLikes = (int)trackList.Where(t => t.Albums?.Any() == true).Select(t => t.Albums[0].LikesCount).Average(),
             AverageYear = (int)trackList.Where(t => t.Albums?.Any() == true).Select(t => t.Albums[0].Year).Average(),
