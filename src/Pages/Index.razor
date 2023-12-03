@@ -1,9 +1,29 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject NotificationService NotificationService
+@using Microsoft.AspNetCore.Components.Routing
 
-<PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<PageTitle>YMS</PageTitle>
 
-Welcome to your new app.
+<div class="section">
+    <input @bind-value=@token placeholder="Your YM token" autofocus/>
+    <button @onclick=@NavToStats>Get stats</button>
+</div>
+<RadzenNotification />
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code
+{
+    private string token = "y0_AgAAAAAnJ69TAAG8XgAAAADx2ww6TmAJMqPpSp-JbhDLtmn5BauUovg";
+
+    private void NavToStats()
+    {
+        if (token is "")
+            NotificationService.Notify(summary: "Inserted token is invalid", 
+            detail: "Token is invalid or haven't been provided at all. Navigate " +
+            "to help on the top bar to find instructions on how to get your yandex " +
+            "music token.", duration: 4000, closeOnClick: true);
+        else
+            NavigationManager.NavigateTo("/stats/" + token);
+    }
+}

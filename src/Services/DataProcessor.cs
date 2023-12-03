@@ -6,7 +6,7 @@ namespace YandexMusicStats.Services;
 
 public class DataProcessor
 {
-    public Stats GetStats(List<YTrack> trackList, YLoginInfo loginInfo)
+    public Stats GetStats(YLoginInfo loginInfo, List<YTrack> trackList)
     {
         return new Stats
         {

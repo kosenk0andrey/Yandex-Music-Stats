@@ -1,0 +1,86 @@
+﻿@page "/stats/{token}"
+@inject DataProcessor Processor
+@inject DataProvider Provider
+@using Yandex.Music.Api.Models.Account;
+@using Yandex.Music.Api.Models.Track
+@using YandexMusicStats.Data
+@using YandexMusicStats.Services
+
+<PageTitle>YMS</PageTitle>
+
+@if (stats is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="section">
+        <div class="upper-stats">
+            <div class="user-info">
+                <img src=@stats.AvatarUrl/>
+                <div>
+                    <span>Username: @stats.UserName</span>
+                    <span>Email: @stats.Email</span>
+                </div>
+            </div>
+            <div class="tracks-info">
+                <div class="keys">
+                    <span>Amount of tracks:</span>
+                    <span>Avg track likes:</span>
+                    <span>Avg track duration:</span>
+                    <span>Avg release year:</span>
+                </div>
+                <div class="values">
+                    <span>@stats.TrackCount</span>
+                    <span>@stats.AverageLikes</span>
+                    <span>@(stats.AverageDuration / 1000)s</span>
+                    <span>@stats.AverageYear</span>
+                </div>
+            </div>
+        </div>
+        <div class="lower-stats">
+            <div class="bests">
+                <span>Best tracks precentage</span>
+                <RadzenArcGauge Style="width: 100%">
+                    <RadzenArcGaugeScale Min="0" Max="100" Radius="1">
+                        <RadzenArcGaugeScaleValue Value="43">
+                            <Template Context="pointer">
+                                <span>
+                                    @(pointer.Value)%
+                                </span>
+                            </Template>
+                        </RadzenArcGaugeScaleValue>
+                    </RadzenArcGaugeScale>
+                </RadzenArcGauge>
+            </div>
+            <div class="genres">
+                <span>Tracks genre breakdown</span>
+                <RadzenChart Style="width: 100%">
+                    <RadzenDonutSeries Data="@stats.GenreBreakdown" CategoryProperty="Key" ValueProperty="Value" TotalAngle="180" StartAngle="180" />
+                    <RadzenLegend Visible="false" />
+                </RadzenChart>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private Stats? stats;
+
+    [Parameter]
+    public required string Token { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        stats = null;
+
+        if (Token is not null)
+        {
+            YLoginInfo? loginInfo = await Provider.GetUserInfoAsync(Token);
+            List<YTrack>? trackList = await Provider.GetLikedTracksAsync(Token);
+
+            if (loginInfo is not null && trackList is not null)
+                stats = Processor.GetStats(loginInfo, trackList);
+        }
+    }
+}

@@ -1,0 +1,7 @@
+﻿.section {
+    width: 100%;
+    margin-bottom: 0.15rem
+}
+.section > h2 {
+    font-size: 2rem;
+}

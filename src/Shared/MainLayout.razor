@@ -1,19 +1,31 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <PageTitle>YandexMusicStats</PageTitle>
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
+        <header class="top-row px-4">
+            <h1 class="title">Yandex Music Stats</h1>
+            <div class="links">
+                <span @onclick="NavToIndex">Home</span>
+                <span @onclick="NavToHelp">Help</span>
+            </div>
+        </header>
         <article class="content px-4">
             @Body
         </article>
     </main>
 </div>
+
+@code
+{
+    private void NavToIndex()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    private void NavToHelp()
+    {
+        NavigationManager.NavigateTo("/help");    
+    }
+}

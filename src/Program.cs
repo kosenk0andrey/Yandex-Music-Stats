@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Radzen;
 using YandexMusicStats.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<DataProcessor>();
 builder.Services.AddSingleton<DataProvider>();
+builder.Services.AddScoped<NotificationService>();
 
 var app = builder.Build();
 
